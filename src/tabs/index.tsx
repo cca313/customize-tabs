@@ -2,6 +2,7 @@ import { defineComponent, reactive } from 'vue'
 import './index.less'
 interface ITabProps {
   name: string
+  value: unknown
 }
 
 export default defineComponent({
@@ -16,20 +17,18 @@ export default defineComponent({
     ])
     return () => (
       <>
-        <div>
-          <div class="tab-nav">
-            <div class="tab-nav-box">
-              <div class="tab-nav-title">321</div>
+        <div class="tab-nav-box">
+          {list.map((tabNav: ITabProps) => (
+            <div class="tab-nav">
+              <div class="tab-nav-content">
+                <span class="tab-nav-title">{tabNav.name}</span>
+              </div>
+              <div class="tab-nav__close">x</div>
             </div>
-            <div class="tab-nav-box">
-              <div class="tab-nav-title">321</div>
-            </div>
-          </div>
-          <div class="tab-pane">tabpane</div>
-          {list.map((tab: ITabProps) => {
-            return <div>{tab.name}</div>
-          })}
+          ))}
         </div>
+
+        <div class="tab-pane">tabpane</div>
       </>
     )
   },
