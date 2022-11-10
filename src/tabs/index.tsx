@@ -1,13 +1,13 @@
-import { defineComponent, reactive } from 'vue'
+import { defineComponent, reactive, ref, watch } from 'vue'
 import './index.less'
 interface ITabProps {
-  name: string
-  value: unknown
+  name: string | number
+  value: string | number 
 }
 
 export default defineComponent({
   name: 'Tabs',
-  setup() {
+  setup(props, { emit, slots, expose }) {
     const list = reactive([
       { name: '标签页1', value: '1' },
       { name: '标签页2', value: '2' },
@@ -15,20 +15,96 @@ export default defineComponent({
       { name: '标签页4', value: '4' },
       { name: '标签页5', value: '5' },
     ])
+    // 位置
+    const position = 'right'
+    // 容器类名
+    const containerClass = ''
+    // 选中key
+    const activeKey = ref(0);
+    const $nav = ref()
+    const funcPromise = () => new Promise((resolve,reject) => {
+      // setTimeout(() => { reject(false) },1000)
+      reject(false)
+    })
+    const funcBoolean = () => { return false }
+    const handleTabNavClick = async( event:MouseEvent,index:number) =>  {
+      console.log(event,index)
+      // todo 在点击事件里判断beforeleave的条件
+      // const flag = funcBoolean()
+      // const flag1 =
+      // console.log(funcBoolean())
+      try {
+        const flag = await funcPromise()
+        if(flag !== false) {
+          
+        }
+        console.log(flag,'flag')
+        activeKey.value = index
+      } catch (error) {
+      }
+    }
+
+    // const $nav = ref<TabNavInstance>()
+    // const setCurrentTabName = (tabName:string) => {
+    //   // if (currentName !== value && this.beforeLeave) {
+    //   //   const before = this.beforeLeave(value, this.currentName);
+    //   //   if (before && before.then) {
+    //   //     before
+    //   //       .then(() => {
+    //   //         changeCurrentName();
+    //   //         this.$refs.nav && this.$refs.nav.removeFocus();
+    //   //       }, () => {
+    //   //         // https://github.com/ElemeFE/element/pull/14816
+    //   //         // ignore promise rejection in `before-leave` hook
+    //   //       });
+    //   //   } else if (before !== false) {
+    //   //     changeCurrentName();
+    //   //   }
+    //   // } else {
+    //   //   changeCurrentName();
+    //   // }
+    // }
+    // const setCurrentName = async (value?: number) => {
+    //   // should do nothing.
+    //   if (activeKey.value === value || typeof(value) === 'undefined') return
+
+    //   try {
+    //     const canLeave = await 
+    //     if (canLeave !== false) {
+    //       changeCurrentName(value)
+
+    //       // call exposed function, Vue doesn't support expose in typescript yet.
+    //       // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    //       // @ts-expect-error
+    //       nav$.value?.removeFocus?.()
+    //     }
+    //   } catch {}
+    // }
+
+    // watch(() => activeKey.value, (next,prev) => {
+    //   // onChange回调
+    //   console.log('watch',next,prev)
+    //   // console.log(flag)
+    //   // console.log(funcBoolean(),funcPromise())
+    // })
+
     return () => (
       <>
-        <div class="tab-nav-box">
-          {list.map((tabNav: ITabProps) => (
-            <div class="tab-nav">
-              <div class="tab-nav-content">
-                <span class="tab-nav-title">{tabNav.name}</span>
+        <div class={['tabs-container', position ? `tabs-container--${position}`: '']}>
+        <div class={['tab-nav-box', position ? `tab-nav-box--${position}` : '']}>
+          {list.map((tabNav: ITabProps,idx: number) => (
+            <div class={['tab-nav', activeKey.value === idx ? 'tab-nav--active':'']} key={idx}>
+              <div class="tab-nav-content " onClick={(e) => handleTabNavClick(e,idx)}>
+                <span class="tab-nav-title tab-nav__active">{tabNav.name}</span>
               </div>
               <div class="tab-nav__close">x</div>
             </div>
           ))}
+
         </div>
 
-        <div class="tab-pane">tabpane</div>
+        <div class={['tab-pane', position ? `tab-pane--${position}`: '']}>{activeKey.value}</div>
+        </div>
       </>
     )
   },

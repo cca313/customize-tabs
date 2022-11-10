@@ -1,15 +1,65 @@
+// 公共样式
+.flex-end {
+  justify-content: flex-end;
+}
+.inline-flex {
+  display: inline-flex;
+}
+
+
+// tabs容器
+.tabs-container {
+  display: flex;
+  &--top {
+    flex-direction: column;
+    .flex-end()
+  }
+  &--left {
+    flex-direction: column;
+  }
+  &--right {
+    
+  }
+}
+
+
+// 标签容器
 .tab-nav-box {
   display: flex;
   &--left {
-    display: inline-flex;
     flex-direction: column;
+    margin-right: 10px;
+  }
+  &--right {
+    justify-content: flex-end;
+    flex-direction: column;
+    margin-left: 10px;
+  }
+}
+
+
+// 标签内容
+.tab-pane {
+  display: block;
+  &--left {
+
+  }
+  &--right {
+    order: -1;
+    flex-grow: 1;
   }
 }
 .tab-nav {
   display: flex;
   justify-content: center;
   align-items: center;
+  &--active {
+    background: red;
+  }
 }
 .tab-nav-content {
   padding: 8px 20px 6px 20px;
 }
+
+.size--small {}
+.size--middle {}
