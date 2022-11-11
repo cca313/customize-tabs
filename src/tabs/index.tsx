@@ -1,12 +1,57 @@
-import { defineComponent, reactive, ref, watch } from 'vue'
+import { defineComponent, reactive, ref, PropType } from 'vue'
+import {
+  TTabPosition,
+  TTabSize,
+  TTabType,
+  TTabEffect,
+  TTabActiveName,
+  onBeforeLeave,
+} from './type'
 import './index.less'
-interface ITabProps {
-  name: string | number
-  value: string | number 
+
+interface ITabsProps {
+  activeName: TTabActiveName
+  disabled: boolean
+  effect: TTabEffect
+}
+export type tabsEmits = {
+  'update:modelValue': (name: TTabActiveName) => void
+}
+export const tabsProps = {
+  modalValue: {
+    type: [String, Number],
+  },
+  activeName: {
+    type: [String, Number] as PropType<TTabActiveName>,
+    required: true,
+  },
+  disabled: {
+    type: Boolean,
+    default: false,
+  },
+  effect: {
+    type: String as PropType<TTabEffect>,
+  },
+  size: {
+    type: String as PropType<TTabSize>,
+    default: 'middle',
+  },
+  position: {
+    type: String as PropType<TTabPosition>,
+    default: 'top',
+  },
+  type: {
+    type: String as PropType<TTabType>,
+    default: 'line',
+  },
+  beforeLeave: {
+    type: Function as PropType<onBeforeLeave>,
+  },
 }
 
 export default defineComponent({
   name: 'Tabs',
+  props: {},
   setup(props, { emit, slots, expose }) {
     const list = reactive([
       { name: '标签页1', value: '1' },
@@ -20,31 +65,31 @@ export default defineComponent({
     // 容器类名
     const containerClass = ''
     // 选中key
-    const activeKey = ref(0);
+    const activeKey = ref(0)
     const $nav = ref()
-    const funcPromise = () => new Promise((resolve,reject) => {
-      // setTimeout(() => { reject(false) },1000)
-      reject(false)
-    })
-    const funcBoolean = () => { return false }
-    const handleTabNavClick = async( event:MouseEvent,index:number) =>  {
-      console.log(event,index)
+    const funcPromise = () =>
+      new Promise((resolve, reject) => {
+        // setTimeout(() => { reject(false) },1000)
+        reject(false)
+      })
+    const funcBoolean = () => {
+      return false
+    }
+    const handleTabNavClick = async (event: MouseEvent, index: number) => {
+      console.log(event, index)
       // todo 在点击事件里判断beforeleave的条件
       // const flag = funcBoolean()
       // const flag1 =
       // console.log(funcBoolean())
       try {
         const flag = await funcPromise()
-        if(flag !== false) {
-          
+        if (flag !== false) {
+          activeKey.value = index
         }
-        console.log(flag,'flag')
+        console.log(flag, 'flag')
         activeKey.value = index
-      } catch (error) {
-      }
+      } catch (error) {}
     }
-
-    // const $nav = ref<TabNavInstance>()
     // const setCurrentTabName = (tabName:string) => {
     //   // if (currentName !== value && this.beforeLeave) {
     //   //   const before = this.beforeLeave(value, this.currentName);
@@ -69,7 +114,7 @@ export default defineComponent({
     //   if (activeKey.value === value || typeof(value) === 'undefined') return
 
     //   try {
-    //     const canLeave = await 
+    //     const canLeave = await
     //     if (canLeave !== false) {
     //       changeCurrentName(value)
 
@@ -81,29 +126,41 @@ export default defineComponent({
     //   } catch {}
     // }
 
-    // watch(() => activeKey.value, (next,prev) => {
-    //   // onChange回调
-    //   console.log('watch',next,prev)
-    //   // console.log(flag)
-    //   // console.log(funcBoolean(),funcPromise())
-    // })
-
     return () => (
       <>
-        <div class={['tabs-container', position ? `tabs-container--${position}`: '']}>
-        <div class={['tab-nav-box', position ? `tab-nav-box--${position}` : '']}>
-          {list.map((tabNav: ITabProps,idx: number) => (
-            <div class={['tab-nav', activeKey.value === idx ? 'tab-nav--active':'']} key={idx}>
-              <div class="tab-nav-content " onClick={(e) => handleTabNavClick(e,idx)}>
-                <span class="tab-nav-title tab-nav__active">{tabNav.name}</span>
+        <div
+          class={[
+            'tabs-container',
+            position ? `tabs-container--${position}` : '',
+          ]}
+        >
+          <div
+            class={['tab-nav-box', position ? `tab-nav-box--${position}` : '']}
+          >
+            {list.map((tabNav: ITabProps, idx: number) => (
+              <div
+                class={[
+                  'tab-nav',
+                  activeKey.value === idx ? 'tab-nav--active' : '',
+                ]}
+                key={idx}
+              >
+                <div
+                  class="tab-nav-content "
+                  onClick={e => handleTabNavClick(e, idx)}
+                >
+                  <span class="tab-nav-title tab-nav__active">
+                    {tabNav.name}
+                  </span>
+                </div>
+                <div class="tab-nav__close">x</div>
               </div>
-              <div class="tab-nav__close">x</div>
-            </div>
-          ))}
+            ))}
+          </div>
 
-        </div>
-
-        <div class={['tab-pane', position ? `tab-pane--${position}`: '']}>{activeKey.value}</div>
+          <div class={['tab-pane', position ? `tab-pane--${position}` : '']}>
+            {activeKey.value}
+          </div>
         </div>
       </>
     )
