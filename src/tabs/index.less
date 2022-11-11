@@ -26,6 +26,8 @@
 // 标签容器
 .tab-nav-box {
   display: flex;
+  width: fit-content;
+  // overflow: auto;
   &--left {
     flex-direction: column;
     margin-right: 10px;
@@ -55,6 +57,12 @@
   align-items: center;
   &--active {
     background: red;
+  }
+  &-content {
+    max-width: 120px;
+    overflow-x: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
   }
 }
 .tab-nav-content {

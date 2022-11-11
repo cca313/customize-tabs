@@ -26,7 +26,7 @@ export default defineComponent({
 
     return () => (
       <>
-        <Tabs />
+        <Tabs style={{width: '500px'}} />
         {/* <AppHeader />
         <NewTodoInput />
         <TodoList todos={filterdTodos.value} />
